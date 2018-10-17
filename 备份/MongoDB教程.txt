@@ -1,0 +1,79 @@
+
+#一、下载
+MongoDB的官网是：http://www.mongodb.com/,点击左上方的DOCS进入文档界面，点击MongoDB Drivers进入驱动界面，选择Java类型。
+
+选择MongoDB Java Driver Documentation进入复制驱动文件到pom.xml中
+
+ <dependency>
+        <groupId>org.mongodb</groupId>
+        <artifactId>mongodb-driver</artifactId>
+        <version>3.2.2</version>
+    </dependency>
+
+MongoDB最新版本下载在官网的DownLoad菜单下：http://www.mongodb.com/downloads 
+
+选择的版本是根据机器的程序来选择
+
+#二、安装
+开始安装过程了，点击msi文件开始安装。
+
+1.解压mongodb-win32-i386-1.8.1.zip ，创建路径C:\Program Files\mongodb ，将解压后的Bin文件复制到此文件夹下
+
+2.C:\Program Files\mongodb 下建立Data文件夹 C:\Program Files\mongodb\data ,然后分别建立db,log两个文件夹，至此mongodb下有以下文件夹
+
+C:\Program Files\mongodb\bin
+
+C:\Program Files\mongodb\data\db
+
+C:\Program Files\mongodb\data\log
+
+在log文件夹下创建一个日志文件MongoDB.log，即C:\Program Files\mongodb\data\log\MongoDB.log（因为，Mongodb安装需要这些文件夹，默认安装是不用创建，但是文件都为安装到C:\data\下）
+
+在D盘下创建文件夹，MongoDB，在此文件夹下创建data文件夹、etc文件夹和log文件夹。
+
+etc文件夹下创建mongod.conf文件。配置如下
+
+systemLog:
+    destination: file
+    path: "D:\\MongoDB\\log\\mongod.log"
+    logAppend: true
+storage:
+    dbPath: "D:\\MongoDB\\data"
+net:
+    #bindIP:127.0.0.1
+    port: 27017
+
+#三、程序启动方式
+
+ 运行cmd.exe 进入DOS命中界面
+
+> cd C:\Program Files\mongodb\bin
+
+打开MongoDB的bin目录黑窗口命令执行mongod.exe --config D:\MongoDB\etc\mongod.conf即可开启Mongodb数据库连接。
+
+使用eclipse建立Maven工程将上述配置文件导入pom.xml
+
+创建MongoClient对象
+        MongoClient client = new MongoClient();
+
+        MongoDatabase database = client.getDatabase("jsb");
+
+        MongoCollection<Document> collection = database.getCollection("user");
+
+        Document document = new Document();
+
+        document.append("name", "吴彦祖").append("age", "32");
+
+        collection.insertOne(document);
+
+
+        int count = (int) collection.count();
+
+        Document docu = collection.find().first();
+
+        System.out.println(count);
+
+        System.out.println(docu);
+
+        client.close();
+至此，使用MongoClient向MongoDB数据库插入数据就可以了。
